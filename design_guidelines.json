@@ -1,0 +1,114 @@
+{
+  "theme": "dark",
+  "archetype": "Luxury & Electric (Awwwards-style Cyber-Editorial)",
+  "typography": {
+    "strategy": "The 'Swiss Brutalist' Tech Variant - Extreme weight contrast between massive geometric headers and strict monospace details.",
+    "fonts": {
+      "heading": "Outfit",
+      "body": "JetBrains Mono",
+      "import_instructions": "Add to index.html: <link href=\"https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Outfit:wght@300;700;900&display=swap\" rel=\"stylesheet\">"
+    },
+    "hierarchy": {
+      "h1": "text-5xl md:text-7xl lg:text-[10vw] font-black tracking-tighter leading-none uppercase",
+      "h2": "text-4xl md:text-6xl font-bold tracking-tight leading-tight",
+      "h3": "text-2xl md:text-4xl font-medium tracking-tight",
+      "body": "text-base md:text-lg font-light leading-relaxed font-mono",
+      "overline": "text-xs md:text-sm tracking-[0.2em] uppercase font-mono text-muted"
+    }
+  },
+  "colors": {
+    "background": {
+      "primary": "#050505",
+      "secondary": "#0a0a0a",
+      "surface": "#121212"
+    },
+    "text": {
+      "primary": "#ffffff",
+      "secondary": "#a1a1aa",
+      "muted": "#52525b"
+    },
+    "border": {
+      "default": "rgba(255,255,255,0.08)",
+      "hover": "rgba(255,255,255,0.2)"
+    },
+    "accent": {
+      "primary": "#ffffff",
+      "glow": "rgba(255,255,255,0.15)"
+    }
+  },
+  "spacing_and_layout": {
+    "philosophy": "Generous Spacing (p-8 to p-32) combined with strict 1px grid borders for a technical, high-end feel.",
+    "grid_system": "Use The 'Technical' Look: border-collapse style layout. Expose the skeleton by using 1px subtle borders (border-border) on grid items.",
+    "containers": "Max width 100vw, overflow-x-hidden. Use padding px-6 md:px-12 lg:px-24 for content bounds.",
+    "header": "Fixed top-0 w-full z-50. MUST use Crystal Glass effect: backdrop-blur-xl bg-[#050505]/60 border-b border-white/10. NO fully transparent headers."
+  },
+  "motion_choreography": {
+    "global": "Lenis for smooth momentum scrolling. Framer Motion for scroll-linked animations.",
+    "on_load_signature": "Masked line-by-line reveal. Wrap each line of the hero H1 in an overflow-hidden div, and animate the inner text from y: '100%' to y: '0%' with a custom cubic-bezier(0.76, 0, 0.24, 1) duration 1.2s.",
+    "scroll_reveals": "Use Framer Motion 'whileInView' with viewport={{ once: true, margin: '-100px' }}. Elements should subtly fade in and translate-y (y: 40 -> 0).",
+    "hover_states": "Images in Project section MUST have 'hover:scale-105' transition inside an 'overflow-hidden' container. Custom cursors or scale transitions on buttons are highly recommended.",
+    "parallax": "Use Framer Motion 'useScroll' and 'useTransform' on the 3D canvas container to make it move at a different speed than the text."
+  },
+  "3d_libraries_and_setup": {
+    "libraries": [
+      "@react-three/fiber",
+      "@react-three/drei",
+      "three",
+      "framer-motion",
+      "lucide-react",
+      "@studio-freight/react-lenis",
+      "react-fast-marquee"
+    ],
+    "hero_3d_concept": "Interactive 3D center piece. Use a `<TorusKnot>` or `<Icosahedron>` with a `<MeshPhysicalMaterial>` (metalness: 1, roughness: 0.2, clearcoat: 1) to simulate a dark chrome/liquid metal look. Add `<Environment preset='city'>` and `<Float>` from drei to make it hover.",
+    "lighting": "CRITICAL: Ensure adequate lighting in the R3F canvas (ambientLight + directionalLight + Environment) so the metallic material reflects."
+  },
+  "sections": {
+    "hero": "100vh sticky container. Massive kinetic typography overlaid on top of the R3F Canvas. Text has mix-blend-difference or z-index 10 to float above the 3D model. Signature load animation here.",
+    "about": "Numbered manifesto chapters (e.g., '[ 01 ] THE PHILOSOPHY'). Technical grid layout, large typography, massive negative space.",
+    "skills": "One slow editorial marquee using 'react-fast-marquee'. Outline text (text-transparent webkit-text-stroke) moving infinitely.",
+    "projects": "Real product photography treated deliberately. 1-column or 2-column large grid. Spotlights/clipped frames (overflow hidden with internal hover scale).",
+    "contact": "Visual-only form. Strict minimalist inputs (bg-transparent, border-b only, focus:border-white). Large 'LET\\'S TALK' heading."
+  },
+  "image_urls": [
+    {
+      "url": "https://images.unsplash.com/photo-1707567019592-a05a41cc0b52?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NzR8MHwxfHNlYXJjaHwyfHxhYnN0cmFjdCUyMGRhcmslMjAzZCUyMGdlb21ldHJpYyUyMG1ldGFsbGljfGVufDB8fHx8MTc4NTIwNjg1NHww&ixlib=rb-4.1.0&q=85",
+      "description": "Dark metallic 3D texture",
+      "category": "hero_texture_or_fallback"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1769594362058-d561f024a235?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzN8MHwxfHNlYXJjaHwzfHxtaW5pbWFsaXN0JTIwc2xlZWslMjBkYXJrJTIwdGVjaG5vbG9neSUyMHByb2R1Y3R8ZW58MHx8fHwxNzg1MjA2ODYzfDA&ixlib=rb-4.1.0&q=85",
+      "description": "Minimalist sleek dark technology product (Smartphone)",
+      "category": "projects_1"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1775839700200-804627f67c66?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzN8MHwxfHNlYXJjaHw0fHxtaW5pbWFsaXN0JTIwc2xlZWslMjBkYXJrJTIwdGVjaG5vbG9neSUyMHByb2R1Y3R8ZW58MHx8fHwxNzg1MjA2ODYzfDA&ixlib=rb-4.1.0&q=85",
+      "description": "Close-up of smartphone camera lens array",
+      "category": "projects_2"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1517241034903-9a4c3ab12f00?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NzR8MHwxfHNlYXJjaHwzfHxhYnN0cmFjdCUyMGRhcmslMjAzZCUyMGdlb21ldHJpYyUyMG1ldGFsbGljfGVufDB8fHx8MTc4NTIwNjg1NHww&ixlib=rb-4.1.0&q=85",
+      "description": "Abstract dark geometric waves",
+      "category": "about_texture"
+    }
+  ],
+  "accessibility": {
+    "guidelines": "Ensure minimum 4.5:1 contrast ratio. Use aria-hidden='true' on decorative 3D elements and marquees. All inputs must have explicit focus rings (focus:ring-white). Include 'prefers-reduced-motion' media queries to disable lenis/framer-motion if requested."
+  },
+  "universal_guidelines": [
+    "DO NOT use generic centered layouts or simplistic gradients. Commit to the dark, brutalist-tech aesthetic.",
+    "DO NOT use 'transition: all'. Explicitly transition specific properties like 'transition-colors' or 'transition-transform'.",
+    "All interactive elements MUST include a 'data-testid' attribute (e.g., data-testid='contact-submit-btn').",
+    "Ensure 'lenis' is wrapped correctly at the root of the layout to enable momentum scrolling.",
+    "Do NOT use AI assistant Emoji characters (🤖🧠💭💡) anywhere. Keep the tone premium and serious.",
+    "Buttons should be sharp or slightly rounded with crisp 1px borders, avoiding pill shapes for this brutalist layout."
+  ],
+  "instructions_to_main_agent": [
+    "Install these dependencies using yarn: @react-three/fiber @react-three/drei three framer-motion @studio-freight/react-lenis lucide-react react-fast-marquee tailwind-merge clsx",
+    "Implement the UI using .js (JSX) extensions. Do not use TypeScript (.tsx).",
+    "Prioritize raw HTML/Tailwind over Shadcn components for this marketing-focused portfolio to ensure custom layout freedom.",
+    "Create a 'LenisProvider' component to wrap the application for momentum scroll.",
+    "Create a 'Hero3D' component for the R3F Canvas and place it behind the kinetic typography in the hero section.",
+    "Construct the Manifesto as a grid with massive negative space, numbered chapters, and 1px border separators.",
+    "Build a pure CSS/Framer Motion visual-only Contact form at the bottom with a minimal, brutalist input style."
+  ]
+}
