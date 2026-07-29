@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "@/App.css";
 import { Toaster } from "sonner";
 import LenisProvider from "@/components/LenisProvider";
@@ -12,9 +13,11 @@ import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
 function App() {
+  const [ready, setReady] = useState(false);
+
   return (
     <div className="App grain">
-      <Preloader onComplete={() => {}} />
+      <Preloader onComplete={() => setReady(true)} />
       <CustomCursor />
       <Toaster
         theme="dark"
@@ -32,7 +35,7 @@ function App() {
       <LenisProvider>
         <Navbar />
         <main>
-          <Hero />
+          <Hero ready={ready} />
           <About />
           <Skills />
           <Projects />

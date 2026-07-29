@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLenis } from "lenis/react";
 import { Menu, X } from "lucide-react";
 import { PROFILE } from "../data";
 
@@ -13,6 +14,7 @@ const LINKS = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const lenis = useLenis();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -22,8 +24,17 @@ export default function Navbar() {
 
   const go = (href) => {
     setOpen(false);
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    if (lenis) {
+      lenis.scrollTo(href, { offset: -90, duration: 1.4 });
+    } else {
+      const el = document.querySelector(href);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const toTop = () => {
+    if (lenis) lenis.scrollTo(0, { duration: 1.4 });
+    else window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -41,7 +52,7 @@ export default function Navbar() {
       <nav className="mx-auto flex items-center justify-between px-6 py-5 md:px-12 lg:px-24">
         <button
           data-testid="nav-logo"
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          onClick={toTop}
           className="font-display text-lg font-black uppercase tracking-tighter text-white"
         >
           {PROFILE.name.split(" ")[0]}

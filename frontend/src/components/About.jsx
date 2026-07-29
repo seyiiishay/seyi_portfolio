@@ -12,14 +12,14 @@ export default function About() {
         {/* Intro statement */}
         <div className="mb-24 max-w-4xl md:mb-36">
           <Reveal>
-            <span className="mb-8 block font-mono text-xs uppercase tracking-[0.3em] text-[#52525b]">
+            <span className="mb-8 block font-mono text-xs uppercase tracking-[0.3em] text-[#8a8a94]">
               [ Manifesto ]
             </span>
           </Reveal>
           <h2 className="font-display text-3xl font-light leading-tight tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl">
             <MaskReveal>A designer who codes,</MaskReveal>
             <MaskReveal delay={0.08}>
-              <span className="text-[#52525b]">an engineer who obsesses</span>
+              <span className="text-[#8a8a94]">an engineer who obsesses</span>
             </MaskReveal>
             <MaskReveal delay={0.16}>over the details.</MaskReveal>
           </h2>
@@ -52,7 +52,7 @@ export default function About() {
 
         {/* Availability line */}
         <Reveal delay={0.1}>
-          <p className="mt-16 font-mono text-xs uppercase tracking-[0.25em] text-[#52525b]">
+          <p className="mt-16 font-mono text-xs uppercase tracking-[0.25em] text-[#8a8a94]">
             {PROFILE.availability}
           </p>
         </Reveal>

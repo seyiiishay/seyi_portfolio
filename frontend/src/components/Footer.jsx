@@ -1,7 +1,12 @@
+import { useLenis } from "lenis/react";
 import { PROFILE } from "../data";
 
 export default function Footer() {
-  const scrollTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  const lenis = useLenis();
+  const scrollTop = () => {
+    if (lenis) lenis.scrollTo(0, { duration: 1.4 });
+    else window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <footer
@@ -23,7 +28,7 @@ export default function Footer() {
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#a1a1aa]">
             {PROFILE.name} — {PROFILE.role}
           </p>
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#52525b]">
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#8a8a94]">
             © 2026 — Designed &amp; built in the browser
           </p>
         </div>

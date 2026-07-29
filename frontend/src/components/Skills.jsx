@@ -11,7 +11,7 @@ export default function Skills() {
     >
       <div className="mb-16 px-6 md:mb-24 md:px-12 lg:px-24">
         <Reveal>
-          <span className="mb-4 block font-mono text-xs uppercase tracking-[0.3em] text-[#52525b]">
+          <span className="mb-4 block font-mono text-xs uppercase tracking-[0.3em] text-[#8a8a94]">
             [ Capabilities ]
           </span>
           <h2 className="max-w-2xl font-display text-3xl font-bold tracking-tight text-white md:text-4xl">

@@ -61,7 +61,7 @@ function ProjectCard({ project, index }) {
             </h3>
             <ArrowUpRight
               size={28}
-              className="mt-1 shrink-0 text-[#52525b] transition-all duration-500 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-white"
+              className="mt-1 shrink-0 text-[#8a8a94] transition-all duration-500 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-white"
             />
           </div>
           <p className="mt-3 font-mono text-xs uppercase tracking-[0.2em] text-[#a1a1aa]">
@@ -86,7 +86,7 @@ export default function Projects() {
       <div className="mx-auto max-w-7xl">
         <div className="mb-16 flex flex-col justify-between gap-6 md:mb-24 md:flex-row md:items-end">
           <Reveal>
-            <span className="mb-6 block font-mono text-xs uppercase tracking-[0.3em] text-[#52525b]">
+            <span className="mb-6 block font-mono text-xs uppercase tracking-[0.3em] text-[#8a8a94]">
               [ Selected Work ]
             </span>
             <h2 className="font-display text-5xl font-black uppercase tracking-tighter text-white md:text-7xl lg:text-8xl">

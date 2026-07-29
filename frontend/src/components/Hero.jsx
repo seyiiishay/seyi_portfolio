@@ -1,8 +1,9 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef, lazy, Suspense } from "react";
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { ArrowDown } from "lucide-react";
-import Hero3D from "./Hero3D";
 import { PROFILE } from "../data";
+
+const Hero3D = lazy(() => import("./Hero3D"));
 
 const EASE = [0.76, 0, 0.24, 1];
 
@@ -23,8 +24,9 @@ function MaskLine({ children, delay }) {
   );
 }
 
-export default function Hero() {
+export default function Hero({ ready = false }) {
   const ref = useRef(null);
+  const inView = useInView(ref, { margin: "0px 0px -20% 0px" });
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
@@ -41,11 +43,12 @@ export default function Hero() {
       className="relative h-screen w-full overflow-hidden"
     >
       {/* 3D layer */}
-      <motion.div
-        style={{ y: canvasY }}
-        className="absolute inset-0 z-0"
-      >
-        <Hero3D />
+      <motion.div style={{ y: canvasY }} className="absolute inset-0 z-0">
+        {ready && (
+          <Suspense fallback={null}>
+            <Hero3D active={inView} />
+          </Suspense>
+        )}
       </motion.div>
 
       {/* Kinetic type layer */}
@@ -87,7 +90,7 @@ export default function Hero() {
         transition={{ delay: 2.6, duration: 1 }}
         className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-3"
       >
-        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#52525b]">
+        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#8a8a94]">
           Scroll
         </span>
         <motion.div
@@ -103,7 +106,7 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.8, duration: 1 }}
-        className="absolute bottom-8 right-6 z-10 hidden text-right font-mono text-[10px] uppercase tracking-[0.25em] text-[#52525b] md:block md:right-12 lg:right-24"
+        className="absolute bottom-8 right-6 z-10 hidden text-right font-mono text-[10px] uppercase tracking-[0.25em] text-[#8a8a94] md:block md:right-12 lg:right-24"
       >
         Portfolio © 2026
         <br />

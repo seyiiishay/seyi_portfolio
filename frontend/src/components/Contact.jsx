@@ -29,7 +29,7 @@ export default function Contact() {
       <div className="mx-auto max-w-7xl">
         <div className="mb-20 md:mb-28">
           <Reveal>
-            <span className="mb-8 block font-mono text-xs uppercase tracking-[0.3em] text-[#52525b]">
+            <span className="mb-8 block font-mono text-xs uppercase tracking-[0.3em] text-[#8a8a94]">
               [ Get in touch ]
             </span>
           </Reveal>
@@ -50,7 +50,7 @@ export default function Contact() {
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor="name"
-                  className="font-mono text-xs uppercase tracking-[0.2em] text-[#52525b]"
+                  className="font-mono text-xs uppercase tracking-[0.2em] text-[#8a8a94]"
                 >
                   01 / Your name
                 </label>
@@ -68,7 +68,7 @@ export default function Contact() {
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor="email"
-                  className="font-mono text-xs uppercase tracking-[0.2em] text-[#52525b]"
+                  className="font-mono text-xs uppercase tracking-[0.2em] text-[#8a8a94]"
                 >
                   02 / Email address
                 </label>
@@ -87,7 +87,7 @@ export default function Contact() {
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor="message"
-                  className="font-mono text-xs uppercase tracking-[0.2em] text-[#52525b]"
+                  className="font-mono text-xs uppercase tracking-[0.2em] text-[#8a8a94]"
                 >
                   03 / Tell me about the project
                 </label>
@@ -124,7 +124,7 @@ export default function Contact() {
           <div className="md:col-span-5 md:pl-12">
             <div className="flex flex-col gap-12">
               <div>
-                <span className="mb-3 block font-mono text-xs uppercase tracking-[0.2em] text-[#52525b]">
+                <span className="mb-3 block font-mono text-xs uppercase tracking-[0.2em] text-[#8a8a94]">
                   Email
                 </span>
                 <a
@@ -137,7 +137,7 @@ export default function Contact() {
               </div>
 
               <div>
-                <span className="mb-3 block font-mono text-xs uppercase tracking-[0.2em] text-[#52525b]">
+                <span className="mb-3 block font-mono text-xs uppercase tracking-[0.2em] text-[#8a8a94]">
                   Based in
                 </span>
                 <p className="font-display text-xl font-medium text-white md:text-2xl">
@@ -146,7 +146,7 @@ export default function Contact() {
               </div>
 
               <div>
-                <span className="mb-4 block font-mono text-xs uppercase tracking-[0.2em] text-[#52525b]">
+                <span className="mb-4 block font-mono text-xs uppercase tracking-[0.2em] text-[#8a8a94]">
                   Elsewhere
                 </span>
                 <div className="flex flex-col gap-3">

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 import { Suspense, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
@@ -21,7 +22,7 @@ function LiquidMetal() {
   return (
     <Float speed={1.4} rotationIntensity={0.5} floatIntensity={1.4}>
       <mesh ref={ref} scale={2.15}>
-        <icosahedronGeometry args={[1, 6]} />
+        <icosahedronGeometry args={[1, 4]} />
         <MeshDistortMaterial
           color="#101014"
           metalness={1}
@@ -71,12 +72,13 @@ function Rig() {
   );
 }
 
-export default function Hero3D() {
+export default function Hero3D({ active = true }) {
   return (
     <Canvas
       camera={{ position: [0, 0, 6], fov: 42 }}
-      dpr={[1, 2]}
-      gl={{ antialias: true, alpha: true }}
+      dpr={[1, 1.5]}
+      frameloop={active ? "always" : "never"}
+      gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       aria-hidden="true"
     >
       <ambientLight intensity={0.35} />
