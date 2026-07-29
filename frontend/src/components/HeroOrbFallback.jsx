@@ -1,8 +1,9 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 // Lightweight, GPU-free stand-in for the WebGL hero object.
 // Renders a dark chrome sphere with layered radial highlights + slow float.
 export default function HeroOrbFallback() {
+  const reduce = useReducedMotion();
   return (
     <div
       className="absolute inset-0 flex items-center justify-center overflow-hidden"
@@ -10,18 +11,21 @@ export default function HeroOrbFallback() {
     >
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
-        animate={{
-          scale: 1,
-          opacity: 1,
-          y: [0, -18, 0],
-          rotate: [0, 4, 0],
-        }}
-        transition={{
-          scale: { duration: 1.4, ease: [0.22, 1, 0.36, 1] },
-          opacity: { duration: 1.4 },
-          y: { duration: 7, repeat: Infinity, ease: "easeInOut" },
-          rotate: { duration: 9, repeat: Infinity, ease: "easeInOut" },
-        }}
+        animate={
+          reduce
+            ? { scale: 1, opacity: 1 }
+            : { scale: 1, opacity: 1, y: [0, -18, 0], rotate: [0, 4, 0] }
+        }
+        transition={
+          reduce
+            ? { duration: 1 }
+            : {
+                scale: { duration: 1.4, ease: [0.22, 1, 0.36, 1] },
+                opacity: { duration: 1.4 },
+                y: { duration: 7, repeat: Infinity, ease: "easeInOut" },
+                rotate: { duration: 9, repeat: Infinity, ease: "easeInOut" },
+              }
+        }
         className="relative h-[62vmin] w-[62vmin] rounded-full"
         style={{
           background:

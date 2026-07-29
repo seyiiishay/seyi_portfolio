@@ -2,12 +2,12 @@
 export const PROFILE = {
   name: "OLUWASEYI OGUNFOWOKAN",
   role: "Software Developer & Creative Technologist",
-  tagline: "I engineer immersive digital experiences at the intersection of code, motion and design.",
+  tagline: "I build modern, accessible, and immersive digital experiences at the intersection of software, motion, and design.",
   location: "Regina, SK",
   email: "pfowokan2000@gmail.com",
   availability: "Available for select projects — Q2 2026",
   socials: [
-    { label: "GitHub", href: "#" },
+    { label: "GitHub", href: "https://github.com/seyiiishay" },
     { label: "LinkedIn", href: "#" },
     { label: "Twitter / X", href: "#" },
     { label: "Dribbble", href: "#" },

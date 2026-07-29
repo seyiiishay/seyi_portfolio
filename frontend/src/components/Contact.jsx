@@ -61,7 +61,7 @@ export default function Contact() {
                   onChange={onChange}
                   data-testid="contact-name"
                   placeholder="John Appleseed"
-                  className="w-full border-b border-white/20 bg-transparent py-3 font-mono text-lg text-white placeholder:text-[#5b5b64] transition-colors duration-300 focus:border-white focus:outline-none focus:ring-0"
+                  className="w-full border-b border-white/20 bg-transparent py-3 font-mono text-lg text-white placeholder:text-[#7d7d86] transition-colors duration-300 focus:border-white focus:outline-none focus:ring-0"
                 />
               </div>
 
@@ -80,7 +80,7 @@ export default function Contact() {
                   onChange={onChange}
                   data-testid="contact-email"
                   placeholder="you@studio.com"
-                  className="w-full border-b border-white/20 bg-transparent py-3 font-mono text-lg text-white placeholder:text-[#5b5b64] transition-colors duration-300 focus:border-white focus:outline-none focus:ring-0"
+                  className="w-full border-b border-white/20 bg-transparent py-3 font-mono text-lg text-white placeholder:text-[#7d7d86] transition-colors duration-300 focus:border-white focus:outline-none focus:ring-0"
                 />
               </div>
 
@@ -99,7 +99,7 @@ export default function Contact() {
                   data-testid="contact-message"
                   rows={3}
                   placeholder="I'm building something ambitious..."
-                  className="w-full resize-none border-b border-white/20 bg-transparent py-3 font-mono text-lg text-white placeholder:text-[#5b5b64] transition-colors duration-300 focus:border-white focus:outline-none focus:ring-0"
+                  className="w-full resize-none border-b border-white/20 bg-transparent py-3 font-mono text-lg text-white placeholder:text-[#7d7d86] transition-colors duration-300 focus:border-white focus:outline-none focus:ring-0"
                 />
               </div>
 
