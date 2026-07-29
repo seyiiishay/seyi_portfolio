@@ -4,6 +4,8 @@ import { ArrowUpRight } from "lucide-react";
 import { Reveal, MaskReveal } from "./Reveal";
 import { PROFILE } from "../data";
 
+const isReal = (url) => url && url !== "#";
+
 export default function Contact() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
 
@@ -150,21 +152,32 @@ export default function Contact() {
                   Elsewhere
                 </span>
                 <div className="flex flex-col gap-3">
-                  {PROFILE.socials.map((s) => (
-                    <a
-                      key={s.label}
-                      href={s.href}
-                      data-testid={`social-${s.label.toLowerCase().replace(/[^a-z]/g, "")}`}
-                      onClick={(e) => e.preventDefault()}
-                      className="group flex w-fit items-center gap-2 font-mono text-sm text-[#a1a1aa] transition-colors duration-300 hover:text-white"
-                    >
-                      {s.label}
-                      <ArrowUpRight
-                        size={14}
-                        className="opacity-0 transition-all duration-300 group-hover:opacity-100"
-                      />
-                    </a>
-                  ))}
+                  {PROFILE.socials.filter((s) => isReal(s.href)).length ===
+                  0 ? (
+                    <span className="font-mono text-sm text-[#8a8a94]">
+                      Links coming soon.
+                    </span>
+                  ) : (
+                    PROFILE.socials
+                      .filter((s) => isReal(s.href))
+                      .map((s) => (
+                        <a
+                          key={s.label}
+                          href={s.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          data-cursor="hover"
+                          data-testid={`social-${s.label.toLowerCase().replace(/[^a-z]/g, "")}`}
+                          className="group flex w-fit items-center gap-2 font-mono text-sm text-[#a1a1aa] transition-colors duration-300 hover:text-white"
+                        >
+                          {s.label}
+                          <ArrowUpRight
+                            size={14}
+                            className="opacity-0 transition-all duration-300 group-hover:opacity-100"
+                          />
+                        </a>
+                      ))
+                  )}
                 </div>
               </div>
             </div>
