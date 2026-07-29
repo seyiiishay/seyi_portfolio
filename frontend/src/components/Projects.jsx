@@ -1,11 +1,14 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Reveal } from "./Reveal";
 import { PROJECTS } from "../data";
 
+const isReal = (url) => url && url !== "#";
+
 function ProjectCard({ project, index }) {
   const ref = useRef(null);
+  const [imgError, setImgError] = useState(false);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
@@ -13,37 +16,68 @@ function ProjectCard({ project, index }) {
   const imgY = useTransform(scrollYProgress, [0, 1], ["-12%", "12%"]);
   const isEven = index % 2 === 0;
 
+  const primaryUrl = isReal(project.liveUrl)
+    ? project.liveUrl
+    : isReal(project.githubUrl)
+      ? project.githubUrl
+      : null;
+
   return (
     <Reveal>
-      <a
-        href="#"
+      <div
         data-testid={`project-${project.id}`}
-        data-cursor="hover"
-        onClick={(e) => e.preventDefault()}
         className="group grid grid-cols-1 items-center gap-8 border-t border-white/10 py-12 md:grid-cols-12 md:gap-12 md:py-20"
       >
-        {/* Image — clipped, spotlight */}
+        {/* Image — clipped, spotlight (links to primary url) */}
         <div
           className={`relative order-1 md:col-span-7 ${
             isEven ? "md:order-1" : "md:order-2"
           }`}
         >
-          <div
-            ref={ref}
-            className="relative aspect-[4/3] overflow-hidden bg-[#121212]"
+          <a
+            href={primaryUrl || undefined}
+            target={primaryUrl ? "_blank" : undefined}
+            rel={primaryUrl ? "noopener noreferrer" : undefined}
+            data-cursor="hover"
+            data-testid={`project-${project.id}-image-link`}
+            aria-label={`Open ${project.title}`}
+            className={`block ${primaryUrl ? "cursor-pointer" : "cursor-default"}`}
+            onClick={(e) => {
+              if (!primaryUrl) e.preventDefault();
+            }}
           >
-            <motion.img
-              style={{ y: imgY, scale: 1.25 }}
-              src={project.image}
-              alt={project.title}
-              loading="lazy"
-              className="h-full w-full object-cover opacity-70 grayscale transition-all duration-700 ease-out group-hover:opacity-100 group-hover:grayscale-0"
-            />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#050505]/60 to-transparent" />
-            <span className="absolute left-5 top-5 font-mono text-xs uppercase tracking-[0.2em] text-white/70">
-              {project.year}
-            </span>
-          </div>
+            <div
+              ref={ref}
+              className="relative aspect-[4/3] overflow-hidden bg-[#121212]"
+            >
+              {!imgError ? (
+                <motion.img
+                  style={{ y: imgY, scale: 1.25 }}
+                  src={project.image}
+                  alt={project.title}
+                  loading="lazy"
+                  onError={() => setImgError(true)}
+                  className="h-full w-full object-cover opacity-70 grayscale transition-all duration-700 ease-out group-hover:opacity-100 group-hover:grayscale-0"
+                />
+              ) : (
+                <div
+                  className="flex h-full w-full items-center justify-center"
+                  style={{
+                    background:
+                      "radial-gradient(120% 120% at 30% 20%, #23252d 0%, #0c0d11 60%, #050506 100%)",
+                  }}
+                >
+                  <span className="font-display text-7xl font-black tracking-tighter text-white/10 md:text-8xl">
+                    {project.id}
+                  </span>
+                </div>
+              )}
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#050505]/60 to-transparent" />
+              <span className="absolute left-5 top-5 font-mono text-xs uppercase tracking-[0.2em] text-white/70">
+                {project.year}
+              </span>
+            </div>
+          </a>
         </div>
 
         {/* Meta */}
@@ -56,9 +90,19 @@ function ProjectCard({ project, index }) {
             {project.id}
           </span>
           <div className="mt-4 flex items-start justify-between gap-4">
-            <h3 className="font-display text-3xl font-bold uppercase tracking-tight text-white md:text-4xl">
+            <a
+              href={primaryUrl || undefined}
+              target={primaryUrl ? "_blank" : undefined}
+              rel={primaryUrl ? "noopener noreferrer" : undefined}
+              data-cursor="hover"
+              data-testid={`project-${project.id}-title-link`}
+              onClick={(e) => {
+                if (!primaryUrl) e.preventDefault();
+              }}
+              className="font-display text-3xl font-bold uppercase tracking-tight text-white transition-colors duration-300 hover:text-[#a1a1aa] md:text-4xl"
+            >
               {project.title}
-            </h3>
+            </a>
             <ArrowUpRight
               size={28}
               className="mt-1 shrink-0 text-[#8a8a94] transition-all duration-500 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-white"
@@ -70,8 +114,46 @@ function ProjectCard({ project, index }) {
           <p className="mt-6 max-w-md font-mono text-sm font-light leading-relaxed text-[#a1a1aa]">
             {project.description}
           </p>
+
+          {/* Action links */}
+          {(isReal(project.liveUrl) || isReal(project.githubUrl)) && (
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              {isReal(project.liveUrl) && (
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-cursor="hover"
+                  data-testid={`project-${project.id}-live`}
+                  className="group/link inline-flex items-center gap-2 border border-white/20 px-5 py-3 font-mono text-xs uppercase tracking-[0.2em] text-white transition-colors duration-300 hover:border-white hover:bg-white hover:text-[#050505]"
+                >
+                  View Live
+                  <ArrowUpRight
+                    size={14}
+                    className="transition-transform duration-300 group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5"
+                  />
+                </a>
+              )}
+              {isReal(project.githubUrl) && (
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-cursor="hover"
+                  data-testid={`project-${project.id}-github`}
+                  className="group/link inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-[#a1a1aa] transition-colors duration-300 hover:text-white"
+                >
+                  Source
+                  <ArrowUpRight
+                    size={14}
+                    className="transition-transform duration-300 group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5"
+                  />
+                </a>
+              )}
+            </div>
+          )}
         </div>
-      </a>
+      </div>
     </Reveal>
   );
 }
