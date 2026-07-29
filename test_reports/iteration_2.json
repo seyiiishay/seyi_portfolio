@@ -1,0 +1,61 @@
+{
+  "summary": "Frontend-only retest completed on the public preview at desktop 1920x1080 and mobile 390x844. The preloader fix passed four fresh loads (4.76-5.11s), all desktop and mobile navbar links reached the correct section with a visible heading offset, the four projects and images loaded, contact validation/success remained visual-only with no mutation request, and no red console/page errors occurred. The principal unresolved defect is severe runtime rendering starvation: an isolated hero rAF sample measured 1.66 FPS, desktop Lenis navigation emitted only 2-3 scroll positions, Back to top missed scrollY~0 by 2.5s in 1 of 2 runs, and the mobile Contact MaskReveal was still clipped after 2s in 1 of 2 runs.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "Hero3D / global motion runtime",
+        "issue": "Severe performance remains after the preloader fix. An isolated 3-second rAF sample with the hero active produced 6 frames over 3.61s (~1.66 FPS); another sample measured ~1.9 FPS. Chromium also logged repeated WebGL GPU-stall warnings. The canvas renders correctly, but motion is not acceptably smooth.",
+        "selector": "[data-testid='hero-section'] canvas",
+        "priority": "CRITICAL"
+      },
+      {
+        "component": "Lenis navbar/footer scrolling",
+        "issue": "Target correctness is fixed, but animation timing remains unreliable under frame starvation. Desktop nav transitions emitted only 2-3 distinct scroll events rather than smooth motion. Back to top was still at scrollY 907 after 2.5s in one run, while a retry reached 0 by 2.5s (50% delayed rate across two runs).",
+        "selector": "[data-testid^='nav-'], [data-testid='footer-back-to-top']",
+        "priority": "HIGH"
+      },
+      {
+        "component": "Mobile Contact MaskReveal",
+        "issue": "Flaky reveal timing: after mobile Contact navigation, one run still showed the headline clipped after 2s with inner transform matrix(..., 0, 36.6167). A retry reached transform none by 2s. About revealed consistently and desktop About/Contact both passed.",
+        "selector": "[data-testid='contact-section'] h2 > span > span",
+        "priority": "HIGH"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {
+        "screen": "Contact form / preloader",
+        "issues": [
+          "Form placeholder text #3f3f46 on #0a0a0a and the preloader label #52525b on #050505 remain very low contrast for small text."
+        ]
+      }
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Further reduce or redesign the Hero3D rendering workload and profile on the public preview until rAF responsiveness is acceptable; current detail/DPR gating fixed preload timing but not post-load FPS.",
+    "Retest Lenis scroll smoothness, footer completion timing, and mobile Contact reveal after the rendering bottleneck is removed.",
+    "Serve project images at viewport-appropriate dimensions instead of decoding 3517-5616px originals, and improve remaining small-text/placeholder contrast."
+  ],
+  "critical_code_review_comments": [
+    "Hero3D still combines a full-viewport 1920x1080 Canvas, DPR up to 1.5, animated MeshDistortMaterial, detail-4 geometry, Float, and a resolution-256 Environment; the public runtime repeatedly reports GPU stalls and measures ~1.66 FPS.",
+    "Project image URLs omit width/srcset sizing and decode very large originals (up to 5616x3744), increasing decode and memory cost while scrolling.",
+    "Preloader schedules a 350ms timeout without retaining and clearing it in effect cleanup; add cleanup to avoid a delayed state update if unmounted during completion."
+  ],
+  "updated_files": [
+    "/app/test_reports/iteration_2.json"
+  ],
+  "success_rate": {
+    "backend": "N/A",
+    "frontend": "86%"
+  },
+  "seed_data_creation": "None",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Verified resolved: preloader detached in 4.76, 5.04, 5.07, and 5.11s; desktop nav Work/About/Skills/Contact landed with section top ~90px and navbar bottom 69px; all mobile links changed scrollY and landed near the same offset; desktop About/Contact and mobile About masks reached transform none; footer ultimately reached scrollY 0; four project cards had correct metadata and loaded images; contact empty error and valid success/clear/no-request flow passed; no red console/page errors. Recheck performance in an isolated browser session and retry flaky timing once. Backend intentionally skipped.",
+  "rca_of_the_issue": "Lazy loading and gating Hero3D successfully prevent WebGL from starving the preloader, resolving its previous 10-14s delay. Once ready becomes true, however, the full-screen animated WebGL workload still drives the public preview to ~1.66 FPS and Chromium reports GPU stalls. Lenis and Framer Motion are rAF-driven, so this starvation collapses smooth scroll into a few large jumps and intermittently delays footer completion and masked headline reveals."
+}
