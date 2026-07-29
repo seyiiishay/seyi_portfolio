@@ -22,7 +22,7 @@ function LiquidMetal() {
   return (
     <Float speed={1.4} rotationIntensity={0.5} floatIntensity={1.4}>
       <mesh ref={ref} scale={2.15}>
-        <icosahedronGeometry args={[1, 4]} />
+        <icosahedronGeometry args={[1, 3]} />
         <MeshDistortMaterial
           color="#101014"
           metalness={1}
@@ -38,7 +38,7 @@ function LiquidMetal() {
 
 function Rig() {
   return (
-    <Environment resolution={256}>
+    <Environment resolution={64}>
       <group rotation={[-Math.PI / 3, 0, 0]}>
         <Lightformer
           intensity={4}

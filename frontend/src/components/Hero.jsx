@@ -1,7 +1,9 @@
-import { useRef, lazy, Suspense } from "react";
+import { useRef, useState, useEffect, lazy, Suspense } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { PROFILE } from "../data";
+import { hasHardwareGPU } from "../lib/perf";
+import HeroOrbFallback from "./HeroOrbFallback";
 
 const Hero3D = lazy(() => import("./Hero3D"));
 
@@ -27,6 +29,12 @@ function MaskLine({ children, delay }) {
 export default function Hero({ ready = false }) {
   const ref = useRef(null);
   const inView = useInView(ref, { margin: "0px 0px -20% 0px" });
+  const [gpu, setGpu] = useState(false);
+
+  useEffect(() => {
+    setGpu(hasHardwareGPU());
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
@@ -42,13 +50,16 @@ export default function Hero({ ready = false }) {
       data-testid="hero-section"
       className="relative h-screen w-full overflow-hidden"
     >
-      {/* 3D layer */}
+      {/* 3D layer (WebGL on GPU devices, CSS orb fallback otherwise) */}
       <motion.div style={{ y: canvasY }} className="absolute inset-0 z-0">
-        {ready && (
-          <Suspense fallback={null}>
-            <Hero3D active={inView} />
-          </Suspense>
-        )}
+        {ready &&
+          (gpu ? (
+            <Suspense fallback={<HeroOrbFallback />}>
+              <Hero3D active={inView} />
+            </Suspense>
+          ) : (
+            <HeroOrbFallback />
+          ))}
       </motion.div>
 
       {/* Kinetic type layer */}
@@ -65,7 +76,11 @@ export default function Hero({ ready = false }) {
           {PROFILE.name} — {PROFILE.location}
         </motion.p>
 
-        <h1 className="font-display text-6xl font-black uppercase leading-[0.85] tracking-tighter text-white mix-blend-difference sm:text-7xl md:text-8xl lg:text-[11vw]">
+        <h1
+          className={`font-display text-6xl font-black uppercase leading-[0.85] tracking-tighter text-white sm:text-7xl md:text-8xl lg:text-[11vw] ${
+            gpu ? "mix-blend-difference" : ""
+          }`}
+        >
           {LINES.map((line, i) => (
             <MaskLine key={line} delay={0.3 + i * 0.12}>
               {line}

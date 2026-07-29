@@ -10,6 +10,7 @@ export default function Preloader({ onComplete }) {
 
   useEffect(() => {
     let raf;
+    let timer;
     const tick = (now) => {
       if (startRef.current === null) startRef.current = now;
       const elapsed = now - startRef.current;
@@ -20,11 +21,14 @@ export default function Preloader({ onComplete }) {
       if (progress < 1) {
         raf = requestAnimationFrame(tick);
       } else {
-        setTimeout(() => setDone(true), 350);
+        timer = setTimeout(() => setDone(true), 350);
       }
     };
     raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(timer);
+    };
   }, []);
 
   return (
@@ -41,7 +45,7 @@ export default function Preloader({ onComplete }) {
               initial={{ y: "110%" }}
               animate={{ y: "0%" }}
               transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
-              className="font-mono text-xs uppercase tracking-[0.4em] text-[#52525b]"
+              className="font-mono text-xs uppercase tracking-[0.4em] text-[#8a8a94]"
             >
               Loading Experience
             </motion.p>
