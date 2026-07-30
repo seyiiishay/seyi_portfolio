@@ -81,7 +81,7 @@ export const PROJECTS = [
     year: "2026",
     description:
       "A financial-planning platform that helps users understand their income, expenses, debt, savings, investments and long-term financial goals through interactive dashboards and personalized planning tools.",
-    image: "/images/projects/wealth-builder.jpg",
+    image: "/images/projects/wealth-builder.png",
     liveUrl: "https://wealthbuilder.elorasuite.ca/",
     githubUrl: "#",
   },
@@ -92,7 +92,7 @@ export const PROJECTS = [
     year: "2026",
     description:
       "A responsive scheduling application built to help users organize tasks, activities and important deadlines. The web application was also converted into a mobile experience using Capacitor.",
-    image: "/images/projects/schedule-planner.jpg",
+    image: "/images/projects/schedule-planner.png",
     liveUrl: "#",
     githubUrl: "#",
   },
@@ -103,7 +103,7 @@ export const PROJECTS = [
     year: "2026",
     description:
       "A faith-focused digital platform designed to provide an organized and accessible experience for spiritual content, community engagement and personal faith-development resources.",
-    image: "/images/projects/faithflow.jpg",
+    image: "/images/projects/faithflow.png",
     liveUrl: "https://faithflow.elorasuite.ca/",
     githubUrl: "#",
   },
