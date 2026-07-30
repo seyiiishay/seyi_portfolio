@@ -1,15 +1,23 @@
+/*
+ * index.css — global styles + design tokens for the whole portfolio.
+ * Loaded once (via src/index.js). Order: Tailwind layers first, then our
+ * theme variables, base element styles, and reusable utility classes.
+ */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Design tokens (CSS variables) — the dark, futuristic palette.
+   Referenced by the base styles below and mirrored by Tailwind arbitrary
+   colors (e.g. text-[#a1a1aa]) used throughout the components. */
 :root {
-  --bg-primary: #050505;
-  --bg-secondary: #0a0a0a;
-  --bg-surface: #121212;
-  --text-primary: #ffffff;
-  --text-secondary: #a1a1aa;
-  --text-muted: #52525b;
-  --border-default: rgba(255, 255, 255, 0.08);
+  --bg-primary: #050505; /* page background (near-black) */
+  --bg-secondary: #0a0a0a; /* alternating section background */
+  --bg-surface: #121212; /* cards / toasts */
+  --text-primary: #ffffff; /* headings + primary text */
+  --text-secondary: #a1a1aa; /* body / secondary text */
+  --text-muted: #52525b; /* faint decorative text */
+  --border-default: rgba(255, 255, 255, 0.08); /* hairline grid lines */
   --border-hover: rgba(255, 255, 255, 0.2);
 }
 
@@ -17,6 +25,7 @@
   box-sizing: border-box;
 }
 
+/* Hide the native scrollbar (Lenis drives the smooth scroll instead). */
 html {
   scrollbar-width: none;
 }
@@ -24,6 +33,7 @@ html::-webkit-scrollbar {
   display: none;
 }
 
+/* Base page: dark background, mono body font, no horizontal overflow. */
 body {
   margin: 0;
   background-color: var(--bg-primary);
@@ -34,6 +44,7 @@ body {
   overflow-x: hidden;
 }
 
+/* Font helpers: display = Outfit (headings), mono = JetBrains Mono (body). */
 .font-display {
   font-family: "Outfit", sans-serif;
 }
@@ -41,7 +52,8 @@ body {
   font-family: "JetBrains Mono", monospace;
 }
 
-/* Grain / noise overlay */
+/* Grain / noise overlay — a fixed, non-interactive film-grain layer applied
+   via the ".grain" class on the app root (adds subtle texture over everything). */
 .grain::before {
   content: "";
   position: fixed;
@@ -52,23 +64,25 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Masked line reveal helper */
+/* Masked line reveal helper — a clipping box. Text inside starts translated
+   down 110% and slides to 0% (see MaskReveal / MaskLine in the components). */
 .line-mask {
   overflow: hidden;
   display: block;
 }
 
-/* Text stroke / outline for marquee */
+/* Outline vs solid text — used by the Skills marquee for its editorial look. */
 .text-stroke {
   -webkit-text-stroke: 1px rgba(255, 255, 255, 0.5);
-  color: transparent;
+  color: transparent; /* hollow / outline text */
 }
 .text-stroke-solid {
   -webkit-text-stroke: 0px;
-  color: #ffffff;
+  color: #ffffff; /* solid fill text */
 }
 
-/* Custom cursor */
+/* Custom cursor — the dot + ring elements rendered by CustomCursor.jsx.
+   mix-blend-difference makes them invert against whatever is behind them. */
 .cursor-dot,
 .cursor-ring {
   position: fixed;
@@ -94,6 +108,7 @@ body {
     background-color 0.25s ease;
 }
 
+/* Hide the custom cursor on touch devices (they have no pointer). */
 @media (hover: none) {
   .cursor-dot,
   .cursor-ring {
@@ -101,11 +116,13 @@ body {
   }
 }
 
+/* Inverted text-selection highlight to match the monochrome theme. */
 ::selection {
   background: #ffffff;
   color: #050505;
 }
 
+/* Default every element's border color to the hairline token. */
 @layer base {
   * {
     border-color: var(--border-default);
