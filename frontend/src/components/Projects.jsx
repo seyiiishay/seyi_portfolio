@@ -72,7 +72,7 @@ function ProjectCard({ project, index }) {
                   alt={project.title}
                   loading="lazy"
                   onError={() => setImgError(true)}
-                  className="h-full w-full object-cover opacity-70 grayscale transition-all duration-700 ease-out group-hover:opacity-100 group-hover:grayscale-0"
+                  className="h-full w-full object-cover opacity-95 transition-opacity duration-700 ease-out group-hover:opacity-100"
                 />
               ) : (
                 <div
