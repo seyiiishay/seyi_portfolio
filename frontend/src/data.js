@@ -93,7 +93,7 @@ export const PROJECTS = [
     description:
       "A responsive scheduling application built to help users organize tasks, activities and important deadlines. The web application was also converted into a mobile experience using Capacitor.",
     image: "/images/projects/schedule-planner.png",
-    liveUrl: "#",
+    liveUrl: "https://elorasuite.ca/",
     githubUrl: "#",
   },
   {
