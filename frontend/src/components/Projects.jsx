@@ -87,7 +87,7 @@ function ProjectCard({ project, index }) {
                   </span>
                 </div>
               )}
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#050505]/60 to-transparent" />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#050505]/25 to-transparent" />
               <span className="absolute left-5 top-5 font-mono text-xs uppercase tracking-[0.2em] text-white/70">
                 {project.year}
               </span>
