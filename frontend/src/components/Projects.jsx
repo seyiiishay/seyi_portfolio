@@ -1,21 +1,36 @@
+/**
+ * Projects — "Selected Work" grid.
+ *
+ * Each card (ProjectCard) alternates image/text sides, applies a subtle scroll
+ * parallax to the image, and reveals colour + zoom on hover.
+ *
+ * Links: `primaryUrl` = live URL if present, else GitHub URL, else null.
+ *  - Real URLs open in a new tab (target=_blank + rel=noopener noreferrer).
+ *  - Cards with no real URL are intentionally non-navigating.
+ *  - "View Live" / "Source" buttons render only when their URL is real.
+ * Missing images (onError) fall back to a numbered gradient placeholder so a
+ * broken-image icon never appears. Project data lives in src/data.js.
+ */
 import { useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Reveal } from "./Reveal";
 import { PROJECTS } from "../data";
 
+// Treat "#" / empty as a placeholder (not a working link).
 const isReal = (url) => url && url !== "#";
 
 function ProjectCard({ project, index }) {
-  const ref = useRef(null);
-  const [imgError, setImgError] = useState(false);
+  const ref = useRef(null); // image wrapper (drives parallax)
+  const [imgError, setImgError] = useState(false); // swap to placeholder on 404
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
-  const imgY = useTransform(scrollYProgress, [0, 1], ["-12%", "12%"]);
-  const isEven = index % 2 === 0;
+  const imgY = useTransform(scrollYProgress, [0, 1], ["-12%", "12%"]); // parallax drift
+  const isEven = index % 2 === 0; // alternate layout sides
 
+  // Prefer the live site; fall back to GitHub; else no link.
   const primaryUrl = isReal(project.liveUrl)
     ? project.liveUrl
     : isReal(project.githubUrl)

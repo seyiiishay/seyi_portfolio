@@ -1,3 +1,18 @@
+/**
+ * Hero — the full-screen opening section.
+ *
+ * Layers (back to front):
+ *   z-0  the 3D object (WebGL <Hero3D/>) OR the CSS <HeroOrbFallback/>
+ *   z-10 the kinetic headline + tagline + scroll cue + corner meta
+ *
+ * Motion:
+ *  - On load, each headline line wipes up (MaskLine).
+ *  - On scroll, the 3D layer and the text move at different speeds (parallax)
+ *    and the text fades out (useScroll + useTransform).
+ *  - The WebGL sphere only mounts when `ready` (preloader done) AND the device
+ *    has a real GPU; otherwise the cheap CSS orb is used. It's also lazy-loaded
+ *    so three.js stays out of the initial bundle.
+ */
 import { useRef, useState, useEffect, lazy, Suspense } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { ArrowDown } from "lucide-react";
@@ -5,12 +20,15 @@ import { PROFILE } from "../data";
 import { hasHardwareGPU } from "../lib/perf";
 import HeroOrbFallback from "./HeroOrbFallback";
 
+// Code-split the WebGL scene: its ~600KB of three.js loads only when needed.
 const Hero3D = lazy(() => import("./Hero3D"));
 
-const EASE = [0.76, 0, 0.24, 1];
+const EASE = [0.76, 0, 0.24, 1]; // signature "expo" easing for reveals
 
+// The headline, split into lines so each can wipe up independently.
 const LINES = ["CREATIVE", "TECHNO-", "LOGIST"];
 
+// One masked line that slides up from behind a clipping box on mount.
 function MaskLine({ children, delay }) {
   return (
     <span className="line-mask">
@@ -27,22 +45,25 @@ function MaskLine({ children, delay }) {
 }
 
 export default function Hero({ ready = false }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { margin: "0px 0px -20% 0px" });
-  const [gpu, setGpu] = useState(false);
+  const ref = useRef(null); // section ref (drives scroll + in-view)
+  const inView = useInView(ref, { margin: "0px 0px -20% 0px" }); // pause 3D offscreen
+  const [gpu, setGpu] = useState(false); // true only on real-GPU devices
 
+  // Detect GPU once on the client (avoids SSR/first-paint issues).
   useEffect(() => {
     setGpu(hasHardwareGPU());
   }, []);
 
+  // Track this section's scroll progress from "top hits top" to "bottom leaves".
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
   });
 
-  const canvasY = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
-  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "120%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  // Parallax mappings derived from scroll progress (0 → 1).
+  const canvasY = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]); // 3D drifts slower
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "120%"]); // text leaves faster
+  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]); // text fades out
 
   return (
     <section
@@ -54,6 +75,7 @@ export default function Hero({ ready = false }) {
       <motion.div style={{ y: canvasY }} className="absolute inset-0 z-0">
         {ready &&
           (gpu ? (
+            // Suspense shows the CSS orb while the three.js chunk downloads.
             <Suspense fallback={<HeroOrbFallback />}>
               <Hero3D active={inView} />
             </Suspense>
@@ -62,11 +84,12 @@ export default function Hero({ ready = false }) {
           ))}
       </motion.div>
 
-      {/* Kinetic type layer */}
+      {/* Kinetic type layer (sits above the 3D object) */}
       <motion.div
         style={{ y: textY, opacity }}
         className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-center px-6 md:px-12 lg:px-24"
       >
+        {/* Overline: name — location */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -76,6 +99,8 @@ export default function Hero({ ready = false }) {
           {PROFILE.name} — {PROFILE.location}
         </motion.p>
 
+        {/* Massive headline. mix-blend-difference (only on GPU path) makes the
+            text invert where it overlaps the bright parts of the sphere. */}
         <h1
           className={`font-display text-6xl font-black uppercase leading-[0.85] tracking-tighter text-white sm:text-7xl md:text-8xl lg:text-[11vw] ${
             gpu ? "mix-blend-difference" : ""
@@ -88,6 +113,7 @@ export default function Hero({ ready = false }) {
           ))}
         </h1>
 
+        {/* Tagline */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -98,7 +124,7 @@ export default function Hero({ ready = false }) {
         </motion.p>
       </motion.div>
 
-      {/* Scroll cue */}
+      {/* Scroll cue — bouncing arrow at bottom-center */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -116,7 +142,7 @@ export default function Hero({ ready = false }) {
         </motion.div>
       </motion.div>
 
-      {/* Corner meta */}
+      {/* Decorative bottom-right meta text */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

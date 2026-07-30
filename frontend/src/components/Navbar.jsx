@@ -1,9 +1,18 @@
+/**
+ * Navbar — fixed top navigation that turns into a glass bar once you scroll.
+ *
+ * Desktop: inline links with an animated underline.
+ * Mobile:  a hamburger toggles an animated drop-down drawer.
+ * All jumps use the Lenis instance (useLenis) so navigation animates smoothly;
+ * `offset: -90` stops ~90px above each section so its heading clears this bar.
+ */
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLenis } from "lenis/react";
 import { Menu, X } from "lucide-react";
 import { PROFILE } from "../data";
 
+// Section anchors the links scroll to (ids live on each <section>).
 const LINKS = [
   { label: "Work", href: "#work" },
   { label: "About", href: "#about" },
@@ -12,16 +21,18 @@ const LINKS = [
 ];
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
-  const lenis = useLenis();
+  const [scrolled, setScrolled] = useState(false); // toggles the glass style
+  const [open, setOpen] = useState(false); // mobile drawer open?
+  const lenis = useLenis(); // smooth-scroll controller from LenisProvider
 
+  // Add the frosted background only after scrolling a little.
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Scroll to a section; close the mobile drawer first.
   const go = (href) => {
     setOpen(false);
     if (lenis) {
@@ -32,6 +43,7 @@ export default function Navbar() {
     }
   };
 
+  // Logo click → back to the very top.
   const toTop = () => {
     if (lenis) lenis.scrollTo(0, { duration: 1.4 });
     else window.scrollTo({ top: 0, behavior: "smooth" });

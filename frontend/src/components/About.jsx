@@ -1,3 +1,9 @@
+/**
+ * About — "manifesto" section.
+ * A large masked intro statement, then numbered chapters (01/02/03) laid out on
+ * a technical 12-column border grid, and finally an availability line.
+ * Content (MANIFESTO array + PROFILE.availability) is edited in src/data.js.
+ */
 import { Reveal, MaskReveal } from "./Reveal";
 import { MANIFESTO, PROFILE } from "../data";
 
@@ -9,7 +15,7 @@ export default function About() {
       className="relative border-t border-white/10 bg-[#050505] px-6 py-28 md:px-12 md:py-40 lg:px-24"
     >
       <div className="mx-auto max-w-7xl">
-        {/* Intro statement */}
+        {/* Intro statement — each line wipes up via MaskReveal */}
         <div className="mb-24 max-w-4xl md:mb-36">
           <Reveal>
             <span className="mb-8 block font-mono text-xs uppercase tracking-[0.3em] text-[#8a8a94]">
@@ -25,7 +31,7 @@ export default function About() {
           </h2>
         </div>
 
-        {/* Numbered chapters */}
+        {/* Numbered chapters — map over MANIFESTO; number brightens on hover */}
         <div className="border-t border-white/10">
           {MANIFESTO.map((chapter, i) => (
             <Reveal key={chapter.id} delay={i * 0.05}>

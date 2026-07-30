@@ -1,17 +1,31 @@
+/**
+ * Contact — the closing "Let's Talk" section.
+ *
+ * Left: a VISUAL-ONLY form. It validates that all fields are filled and shows a
+ *       toast, but it does NOT send anything to a server (no backend yet). To
+ *       make it real, POST `form` to an API / email service inside onSubmit.
+ * Right: direct details — a mailto email link, location, and social links.
+ *        Only socials with a real URL (isReal) are rendered, so there are never
+ *        dead "#" links. All data comes from PROFILE in src/data.js.
+ */
 import { useState } from "react";
 import { toast } from "sonner";
 import { ArrowUpRight } from "lucide-react";
 import { Reveal, MaskReveal } from "./Reveal";
 import { PROFILE } from "../data";
 
+// Treat "#" / empty as a placeholder (not a working link).
 const isReal = (url) => url && url !== "#";
 
 export default function Contact() {
+  // Controlled form state for the three inputs.
   const [form, setForm] = useState({ name: "", email: "", message: "" });
 
+  // Update the matching field by its `name` attribute.
   const onChange = (e) =>
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
+  // Validate + toast. (Demo only — swap in a real request here later.)
   const onSubmit = (e) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) {

@@ -1,3 +1,8 @@
+/**
+ * Footer — closing band with a "Back to top" control and identity line.
+ * Uses the Lenis instance (useLenis) to animate the scroll to the top; falls
+ * back to native smooth scroll if Lenis isn't ready. Content comes from PROFILE.
+ */
 import { useLenis } from "lenis/react";
 import { PROFILE } from "../data";
 

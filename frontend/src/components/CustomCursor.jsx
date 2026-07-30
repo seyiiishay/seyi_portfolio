@@ -1,12 +1,23 @@
+/**
+ * CustomCursor — replaces the OS cursor with a small dot + a larger trailing ring.
+ *
+ * Two elements:
+ *  - dot: snaps exactly to the pointer every mousemove (instant).
+ *  - ring: eases toward the pointer inside a requestAnimationFrame loop, giving
+ *    that smooth "lagging" follow. It grows/tints when hovering interactive els.
+ * We write straight to element.style (not React state) so pointer updates never
+ * trigger re-renders. Elements are aria-hidden and auto-hidden on touch (CSS).
+ */
 import { useEffect, useRef } from "react";
 
 export default function CustomCursor() {
-  const dotRef = useRef(null);
-  const ringRef = useRef(null);
-  const pos = useRef({ x: 0, y: 0 });
-  const ring = useRef({ x: 0, y: 0 });
+  const dotRef = useRef(null); // the small solid dot
+  const ringRef = useRef(null); // the larger easing ring
+  const pos = useRef({ x: 0, y: 0 }); // latest raw pointer position
+  const ring = useRef({ x: 0, y: 0 }); // ring's eased position
 
   useEffect(() => {
+    // Move the dot 1:1 with the pointer.
     const onMove = (e) => {
       pos.current = { x: e.clientX, y: e.clientY };
       if (dotRef.current) {
@@ -14,6 +25,7 @@ export default function CustomCursor() {
       }
     };
 
+    // Grow/tint the ring when hovering links, buttons, inputs, etc.
     const onOver = (e) => {
       const interactive = e.target.closest(
         "a, button, input, textarea, [data-cursor='hover']",
@@ -31,12 +43,13 @@ export default function CustomCursor() {
       }
     };
 
+    // rAF loop: ease the ring toward the pointer (15% of the gap each frame).
     let raf;
     const loop = () => {
       ring.current.x += (pos.current.x - ring.current.x) * 0.15;
       ring.current.y += (pos.current.y - ring.current.y) * 0.15;
       if (ringRef.current) {
-        const w = ringRef.current.offsetWidth / 2;
+        const w = ringRef.current.offsetWidth / 2; // center the ring
         ringRef.current.style.transform = `translate(${ring.current.x - w}px, ${ring.current.y - w}px)`;
       }
       raf = requestAnimationFrame(loop);
@@ -45,6 +58,7 @@ export default function CustomCursor() {
 
     window.addEventListener("mousemove", onMove);
     window.addEventListener("mouseover", onOver);
+    // Clean up listeners + the animation frame on unmount.
     return () => {
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseover", onOver);

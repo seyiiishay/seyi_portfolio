@@ -1,3 +1,20 @@
+/**
+ * data.js — SINGLE SOURCE OF CONTENT for the whole portfolio.
+ *
+ * Edit these plain objects/arrays to update the site (no component changes
+ * needed). Components import from here:
+ *   PROFILE   → name, role, tagline, email, socials (Hero, Navbar, Contact, Footer)
+ *   MANIFESTO → the numbered About chapters
+ *   SKILLS    → the Skills marquee items (and its accessible list)
+ *   PROJECTS  → the Projects cards
+ *
+ * Link fields ("#" means "no link yet"):
+ *   PROFILE.socials[].href → set a real URL to make that social appear/work
+ *   PROJECTS[].liveUrl     → live site URL
+ *   PROJECTS[].githubUrl   → source repo URL
+ * PROJECTS[].image points to files under /public (e.g. /images/projects/x.jpg);
+ * if a file is missing the card shows a numbered gradient placeholder.
+ */
 // Placeholder content — edit these later.
 export const PROFILE = {
   name: "OLUWASEYI OGUNFOWOKAN",
