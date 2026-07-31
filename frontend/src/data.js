@@ -107,15 +107,4 @@ export const PROJECTS = [
     liveUrl: "https://faithflow.elorasuite.ca/",
     githubUrl: "#",
   },
-  {
-    id: "004",
-    title: "3D Developer Portfolio",
-    category: "Creative Development · 3D Web",
-    year: "2026",
-    description:
-      "An immersive software-development portfolio combining accessible interface design with motion, interactive 3D elements and responsive frontend engineering.",
-    image: "/images/projects/developer-portfolio.jpg",
-    liveUrl: "#",
-    githubUrl: "https://github.com/seyiiishay/tech-portfolio",
-  },
 ];
