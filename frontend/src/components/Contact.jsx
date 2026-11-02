@@ -1,9 +1,7 @@
 /**
  * Contact — the closing "Let's Talk" section.
  *
- * Left: a VISUAL-ONLY form. It validates that all fields are filled and shows a
- *       toast, but it does NOT send anything to a server (no backend yet). To
- *       make it real, POST `form` to an API / email service inside onSubmit.
+ * Left: a contact form that posts submissions to the FastAPI backend.
  * Right: direct details — a mailto email link, location, and social links.
  *        Only socials with a real URL (isReal) are rendered, so there are never
  *        dead "#" links. All data comes from PROFILE in src/data.js.
@@ -16,24 +14,43 @@ import { PROFILE } from "../data";
 
 // Treat "#" / empty as a placeholder (not a working link).
 const isReal = (url) => url && url !== "#";
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
 export default function Contact() {
   // Controlled form state for the three inputs.
   const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Update the matching field by its `name` attribute.
   const onChange = (e) =>
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
-  // Validate + toast. (Demo only — swap in a real request here later.)
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) {
       toast.error("Please fill in every field.");
       return;
     }
-    toast.success("Message ready — this is a demo form for now.");
-    setForm({ name: "", email: "", message: "" });
+
+    setIsSubmitting(true);
+    try {
+      const response = await fetch(`${API_URL}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (!response.ok) {
+        throw new Error("Contact request failed");
+      }
+
+      toast.success("Thanks. Your message has been sent.");
+      setForm({ name: "", email: "", message: "" });
+    } catch {
+      toast.error("Could not send your message. Please email me directly.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -123,10 +140,11 @@ export default function Contact() {
                 type="submit"
                 data-testid="contact-submit-btn"
                 data-cursor="hover"
+                disabled={isSubmitting}
                 className="group mt-4 flex w-full items-center justify-between border border-white/20 px-8 py-6 transition-colors duration-300 hover:border-white hover:bg-white md:w-auto md:gap-16"
               >
                 <span className="font-display text-lg font-bold uppercase tracking-tight text-white transition-colors duration-300 group-hover:text-[#050505]">
-                  Send Message
+                  {isSubmitting ? "Sending..." : "Send Message"}
                 </span>
                 <ArrowUpRight
                   size={24}

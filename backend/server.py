@@ -1,11 +1,14 @@
-from fastapi import FastAPI, APIRouter
+import asyncio
+import html
+from fastapi import FastAPI, APIRouter, HTTPException
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
+import requests
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, EmailStr, Field, ConfigDict
 from typing import List
 import uuid
 from datetime import datetime, timezone
@@ -37,10 +40,63 @@ class StatusCheck(BaseModel):
 class StatusCheckCreate(BaseModel):
     client_name: str
 
+class ContactMessageCreate(BaseModel):
+    name: str = Field(min_length=1, max_length=100)
+    email: EmailStr
+    message: str = Field(min_length=1, max_length=5000)
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
     return {"message": "Hello World"}
+
+@api_router.post("/contact", status_code=201)
+async def create_contact_message(input: ContactMessageCreate):
+    resend_api_key = os.environ.get("RESEND_API_KEY")
+    recipient = os.environ.get("CONTACT_TO_EMAIL")
+    sender = os.environ.get(
+        "RESEND_FROM_EMAIL", "Portfolio <contact@notify.elorasuite.ca>"
+    )
+    if not resend_api_key or not recipient:
+        logger.error("RESEND_API_KEY and CONTACT_TO_EMAIL must be configured")
+        raise HTTPException(status_code=503, detail="Email delivery is not configured")
+
+    message = input.model_dump()
+    message["created_at"] = datetime.now(timezone.utc).isoformat()
+    await db.contact_messages.insert_one(message)
+
+    safe_name = html.escape(input.name)
+    safe_email = html.escape(str(input.email))
+    safe_message = html.escape(input.message).replace("\n", "<br>")
+    resend_payload = {
+        "from": sender,
+        "to": [recipient],
+        "reply_to": [str(input.email)],
+        "subject": f"New portfolio inquiry from {input.name}",
+        "text": f"Name: {input.name}\nEmail: {input.email}\n\n{input.message}",
+        "html": (
+            f"<p><strong>Name:</strong> {safe_name}</p>"
+            f"<p><strong>Email:</strong> {safe_email}</p>"
+            f"<p>{safe_message}</p>"
+        ),
+    }
+    try:
+        response = await asyncio.to_thread(
+            requests.post,
+            "https://api.resend.com/emails",
+            headers={
+                "Authorization": f"Bearer {resend_api_key}",
+                "Content-Type": "application/json",
+            },
+            json=resend_payload,
+            timeout=10,
+        )
+        response.raise_for_status()
+    except requests.RequestException:
+        logger.exception("Resend failed to deliver contact message")
+        raise HTTPException(status_code=502, detail="Email delivery failed")
+
+    return {"message": "Your message has been received."}
 
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
@@ -68,6 +124,10 @@ async def get_status_checks():
 
 # Include the router in the main app
 app.include_router(api_router)
+
+@app.get("/")
+async def health_check():
+    return {"message": "Portfolio API is running", "docs": "/docs"}
 
 app.add_middleware(
     CORSMiddleware,
