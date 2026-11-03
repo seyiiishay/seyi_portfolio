@@ -14,7 +14,8 @@ import { PROFILE } from "../data";
 
 // Treat "#" / empty as a placeholder (not a working link).
 const isReal = (url) => url && url !== "#";
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
+const WEB3FORMS_ACCESS_KEY =
+process.env.REACT_APP_WEB3FORMS_ACCESS_KEY || "29d480a2-369c-4347-95cd-a740fc35f559";
 
 export default function Contact() {
   // Controlled form state for the three inputs.
@@ -34,21 +35,33 @@ export default function Contact() {
 
     setIsSubmitting(true);
     try {
-      const response = await fetch(`${API_URL}/api/contact`, {
+           const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          subject: `New portfolio inquiry from ${form.name}`,
+          from_name: form.name,
+          replyto: form.email,
+          name: form.name,
+          email: form.email,
+          message: form.message,
+        }),
       });
 
-      if (!response.ok) {
-        throw new Error("Contact request failed");
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Contact request failed");
       }
 
       toast.success("Thanks. Your message has been sent.");
       setForm({ name: "", email: "", message: "" });
-    } catch {
-      toast.error("Could not send your message. Please email me directly.");
-    } finally {
+    } catch (err) {
+      console.error("Contact form error:", err);
+    finally {
       setIsSubmitting(false);
     }
   };
